@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\core\core\Shipstone.Authenticator.Api.Core.csproj" />
+    <ProjectReference Include="..\infrastructure\authentication\Shipstone.Authenticator.Api.Infrastructure.Authentication.csproj" />
+    <ProjectReference Include="..\infrastructure\data\mysql\Shipstone.Authenticator.Api.Infrastructure.Data.MySql.csproj" />
+    <ProjectReference Include="..\infrastructure\mail\Shipstone.Authenticator.Api.Infrastructure.Mail.csproj" />
+    <ProjectReference Include="..\web\Shipstone.Authenticator.Api.Web.csproj" />
+  </ItemGroup>
+</Project>
