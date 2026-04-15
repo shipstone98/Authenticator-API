@@ -1,5 +1,7 @@
 using System;
 
+using Shipstone.Utilities;
+
 namespace Shipstone.Authenticator.Api.Core;
 
 /// <summary>

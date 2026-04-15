@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 using Shipstone.Extensions.Security;
+using Shipstone.Utilities;
 
 using Shipstone.Authenticator.Api.Core;
 using Shipstone.Authenticator.Api.Core.Accounts;

@@ -55,40 +55,4 @@ public sealed class WebServiceCollectionExtensionsTest
 
         Assert.Equal(ServiceLifetime.Scoped, middlewareDescriptor.Lifetime);
     }
-
-    [Fact]
-    public void TestAddAuthenticatorWebConflictExceptionHandling_Invalid()
-    {
-        // Act
-        ArgumentException ex =
-            Assert.Throws<ArgumentNullException>(() =>
-                WebServiceCollectionExtensions.AddAuthenticatorWebConflictExceptionHandling(null!));
-
-        // Assert
-        Assert.Equal("services", ex.ParamName);
-    }
-
-    [Fact]
-    public void TestAddAuthenticatorWebConflictExceptionHandling_Valid()
-    {
-        // Arrange
-        ICollection<ServiceDescriptor> collection =
-            new List<ServiceDescriptor>();
-
-        MockServiceCollection services = new();
-        services._addAction = collection.Add;
-
-        // Act
-        IServiceCollection result =
-            WebServiceCollectionExtensions.AddAuthenticatorWebConflictExceptionHandling(services);
-
-        // Assert
-        Assert.Same(services, result);
-
-        ServiceDescriptor descriptor =
-            collection.First(s =>
-                s.ServiceType.IsAssignableTo(typeof (IMiddleware)));
-
-        Assert.Equal(ServiceLifetime.Singleton, descriptor.Lifetime);
-    }
 }

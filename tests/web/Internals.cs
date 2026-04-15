@@ -1,5 +1,7 @@
 using Xunit;
 
+using Shipstone.Utilities;
+
 using Shipstone.Authenticator.Api.Core;
 
 namespace Shipstone.Authenticator.Api.WebTest;

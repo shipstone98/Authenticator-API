@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Shipstone.Extensions.Security;
+using Shipstone.Utilities;
 
 using Shipstone.Authenticator.Api.Core.Services;
 using Shipstone.Authenticator.Api.Infrastructure.Authentication;

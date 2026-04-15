@@ -2,6 +2,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Shipstone.Utilities;
+
 namespace Shipstone.Authenticator.Api.Core.Accounts;
 
 /// <summary>

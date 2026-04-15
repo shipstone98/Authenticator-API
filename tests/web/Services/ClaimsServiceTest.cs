@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
+using Shipstone.Utilities;
+
 using Shipstone.Authenticator.Api.Core;
 using Shipstone.Authenticator.Api.Web;
 

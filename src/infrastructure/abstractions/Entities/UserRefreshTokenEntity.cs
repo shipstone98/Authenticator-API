@@ -18,7 +18,7 @@ public class UserRefreshTokenEntity : Entity<long>
     /// <summary>
     /// Gets the ID of the associated user.
     /// </summary>
-    /// <value>A <see cref="Guid" /> containing the ID of the associated user.
+    /// <value>A <see cref="Guid" /> containing the ID of the associated user.</value>
     public Guid UserId { get; init; }
 
     /// <summary>

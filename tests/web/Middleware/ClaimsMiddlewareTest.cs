@@ -10,7 +10,6 @@ using Xunit;
 using Shipstone.Authenticator.Api.Core;
 using Shipstone.Authenticator.Api.Web;
 
-using Shipstone.Authenticator.Api.WebTest.Mocks;
 using Shipstone.Test.Mocks;
 
 namespace Shipstone.Authenticator.Api.WebTest.Middleware;

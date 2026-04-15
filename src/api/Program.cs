@@ -71,7 +71,7 @@ builder.Services
     .AddAuthenticatorInfrastructureData()
     .AddAuthenticatorInfrastructureDataMySql(connectionString)
     .AddAuthenticatorWebClaims()
-    .AddAuthenticatorWebConflictExceptionHandling()
+    .AddConflictExceptionHandling()
     .AddSingleton<IEncryptionService, StubEncryptionService>()
     .AddSingleton<IMailService, StubMailService>()
     .AddSingleton<RandomNumberGenerator>(_ =>
@@ -95,7 +95,7 @@ if (isNcsaCommonLoggingEnabled)
     app.UseNcsaCommonLogging();
 }
 
-app.UseAuthenticatorWebConflictExceptionHandling();
+app.UseConflictExceptionHandling();
 app.UseAuthentication();
 app.UseAuthenticatorWebClaims();
 app.UseAuthorization();

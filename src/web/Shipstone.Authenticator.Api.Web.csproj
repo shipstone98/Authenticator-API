@@ -14,6 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Shipstone.AspNetCore" Version="9.0.1" />
+    <PackageReference Include="Shipstone.AspNetCore" Version="10.0.0" />
   </ItemGroup>
 </Project>

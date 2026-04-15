@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 
 using Shipstone.Utilities;
 
-using Shipstone.Authenticator.Api.Core.Accounts;
 using Shipstone.Authenticator.Api.Infrastructure.Data.Repositories;
 using Shipstone.Authenticator.Api.Infrastructure.Entities;
 
