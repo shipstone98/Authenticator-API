@@ -26,6 +26,7 @@ internal sealed class AuthenticateService : IAuthenticateService
     }
 
     async Task<IAuthenticateResult> IAuthenticateService.AuthenticateAsync(
+        String audience,
         UserEntity user,
         DateTime now,
         CancellationToken cancellationToken
@@ -35,6 +36,7 @@ internal sealed class AuthenticateService : IAuthenticateService
 
         IAuthenticateResult result =
             await this._authentication.AuthenticateAsync(
+                audience,
                 user,
                 now,
                 cancellationToken

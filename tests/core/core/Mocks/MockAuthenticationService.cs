@@ -10,28 +10,31 @@ namespace Shipstone.Authenticator.Api.CoreTest.Mocks;
 
 internal sealed class MockAuthenticationService : IAuthenticationService
 {
-    internal Func<UserEntity, DateTime, IAuthenticateResult> _authenticateAction;
+    internal Func<String, UserEntity, DateTime, IAuthenticateResult> _authenticateAction;
     internal Action<UserEntity, DateTime> _generateOtpAction;
-    internal Func<String, Guid> _getIdFunc;
+    internal Func<String, (String, Guid)> _getPropertiesFunc;
 
     public MockAuthenticationService()
     {
-        this._authenticateAction = (_, _) =>
+        this._authenticateAction = (_, _, _) =>
             throw new NotImplementedException();
 
         this._generateOtpAction = (_, _) =>
             throw new NotImplementedException();
 
-        this._getIdFunc = _ => throw new NotImplementedException();
+        this._getPropertiesFunc = _ => throw new NotImplementedException();
     }
 
     Task<IAuthenticateResult> IAuthenticationService.AuthenticateAsync(
+        String audience,
         UserEntity user,
         DateTime now,
         CancellationToken cancellationToken
     )
     {
-        IAuthenticateResult result = this._authenticateAction(user, now);
+        IAuthenticateResult result =
+            this._authenticateAction(audience, user, now);
+
         return Task.FromResult(result);
     }
 
@@ -45,5 +48,12 @@ internal sealed class MockAuthenticationService : IAuthenticationService
         return Task.CompletedTask;
     }
 
-    Guid IAuthenticationService.GetId(String token) => this._getIdFunc(token);
+    Task<(String, Guid)> IAuthenticationService.GetPropertiesAsync(
+        String token,
+        CancellationToken cancellationToken
+    )
+    {
+        (String, Guid) result = this._getPropertiesFunc(token);
+        return Task.FromResult(result);
+    }
 }

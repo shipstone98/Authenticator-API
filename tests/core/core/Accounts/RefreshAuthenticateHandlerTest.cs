@@ -66,7 +66,7 @@ public sealed class RefreshAuthenticateHandlerTest
     {
         // Arrange
         Exception innerException = new ArgumentException();
-        this._authentication._getIdFunc = _ => throw innerException;
+        this._authentication._getPropertiesFunc = _ => throw innerException;
 
         // Act
         Exception ex =
@@ -84,7 +84,8 @@ public sealed class RefreshAuthenticateHandlerTest
     public Task TestHandleAsync_Valid_Failure_UserRefreshTokenExpired()
     {
         // Arrange
-        this._authentication._getIdFunc = _ => Guid.NewGuid();
+        this._authentication._getPropertiesFunc = _ =>
+            (String.Empty, Guid.Empty);
 
         this._repository._userRefreshTokensFunc = () =>
         {
@@ -114,7 +115,8 @@ public sealed class RefreshAuthenticateHandlerTest
     public Task TestHandleAsync_Valid_Failure_UserRefreshTokenNotFound()
     {
         // Arrange
-        this._authentication._getIdFunc = _ => Guid.NewGuid();
+        this._authentication._getPropertiesFunc = _ =>
+            (String.Empty, Guid.Empty);
 
         this._repository._userRefreshTokensFunc = () =>
         {
@@ -135,7 +137,8 @@ public sealed class RefreshAuthenticateHandlerTest
     public Task TestHandleAsync_Valid_Failure_UserNotActive()
     {
         // Arrange
-        this._authentication._getIdFunc = _ => Guid.NewGuid();
+        this._authentication._getPropertiesFunc = _ =>
+            (String.Empty, Guid.Empty);
 
         this._repository._userRefreshTokensFunc = () =>
         {
@@ -172,7 +175,8 @@ public sealed class RefreshAuthenticateHandlerTest
     public Task TestHandleAsync_Valid_Failure_UserNotFound()
     {
         // Arrange
-        this._authentication._getIdFunc = _ => Guid.NewGuid();
+        this._authentication._getPropertiesFunc = _ =>
+            (String.Empty, Guid.Empty);
 
         this._repository._userRefreshTokensFunc = () =>
         {
@@ -215,7 +219,9 @@ public sealed class RefreshAuthenticateHandlerTest
         const String REFRESH_TOKEN = "My refresh token";
         DateTime now = DateTime.UtcNow;
         DateTime refreshTokenExpires = now.AddDays(123456);
-        this._authentication._getIdFunc = _ => Guid.NewGuid();
+
+        this._authentication._getPropertiesFunc = _ =>
+            (String.Empty, Guid.Empty);
 
         this._repository._userRefreshTokensFunc = () =>
         {
@@ -247,7 +253,7 @@ public sealed class RefreshAuthenticateHandlerTest
             return users;
         };
 
-        this._authentication._authenticateAction = (_, _) =>
+        this._authentication._authenticateAction = (_, _, _) =>
         {
             MockAuthenticateResult result = new();
             result._refreshTokenExpiresFunc = () => refreshTokenExpires;

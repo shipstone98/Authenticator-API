@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -17,7 +18,7 @@ public class AuthenticationOptions : IOptions<AuthenticationOptions>
     internal TimeSpan _accessTokenExpiry;
     internal SigningCredentials _accessTokenSigningKey;
     private String _accessTokenSigningKeyString;
-    internal String _audience;
+    internal IReadOnlySet<String> _audiences;
     internal String _issuer;
     internal TimeSpan _otpExpiry;
     internal TimeSpan _refreshTokenExpiry;
@@ -74,19 +75,14 @@ public class AuthenticationOptions : IOptions<AuthenticationOptions>
         }
     }
 
-    /// <summary>
-    /// Gets or sets the audience for generated authentication tokens.
-    /// </summary>
-    /// <value>The entity that is the intended audience for generated authentication tokens.</value>
-    /// <exception cref="ArgumentNullException">The property is set and the value is <c>null</c>.</exception>
-    public String Audience
+    public IEnumerable<String> Audiences
     {
-        get => this._audience;
+        get => this._audiences;
 
         set
         {
             ArgumentNullException.ThrowIfNull(value);
-            this._audience = value;
+            this._audiences = new SortedSet<String>(value);
         }
     }
 
@@ -189,7 +185,7 @@ public class AuthenticationOptions : IOptions<AuthenticationOptions>
         this._accessTokenExpiry = TimeSpan.FromMinutes(2);
         this._accessTokenSigningKey = signingKey;
         this._accessTokenSigningKeyString = signingKeyString;
-        this._audience = String.Empty;
+        this._audiences = new SortedSet<String>();
         this._issuer = String.Empty;
         this._otpExpiry = TimeSpan.FromMinutes(10);
         this._refreshTokenExpiry = TimeSpan.FromDays(30);

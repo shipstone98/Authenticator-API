@@ -29,6 +29,7 @@ internal sealed class OtpAuthenticateHandler : IOtpAuthenticateHandler
     }
 
     private async Task<IAuthenticateResult> HandleAsync(
+        String audience,
         String emailAddress,
         String otp,
         CancellationToken cancellationToken
@@ -44,6 +45,7 @@ internal sealed class OtpAuthenticateHandler : IOtpAuthenticateHandler
         await this._otp.ValidateAsync(user, otp, now, cancellationToken);
 
         return await this._authenticate.AuthenticateAsync(
+            audience,
             user,
             now,
             cancellationToken
@@ -51,13 +53,21 @@ internal sealed class OtpAuthenticateHandler : IOtpAuthenticateHandler
     }
 
     Task<IAuthenticateResult> IOtpAuthenticateHandler.HandleAsync(
+        String audience,
         String emailAddress,
         String otp,
         CancellationToken cancellationToken
     )
     {
+        ArgumentNullException.ThrowIfNull(audience);
         ArgumentNullException.ThrowIfNull(emailAddress);
         ArgumentNullException.ThrowIfNull(otp);
-        return this.HandleAsync(emailAddress, otp, cancellationToken);
+
+        return this.HandleAsync(
+            audience,
+            emailAddress,
+            otp,
+            cancellationToken
+        );
     }
 }

@@ -36,11 +36,16 @@ internal sealed class RefreshAuthenticateHandler : IRefreshAuthenticateHandler
         CancellationToken cancellationToken
     )
     {
+        String audience;
         Guid id;
 
         try
         {
-            id = this._authentication.GetId(refreshToken);
+            (audience, id) =
+                await this._authentication.GetPropertiesAsync(
+                    refreshToken,
+                    cancellationToken
+                );
         }
 
         catch (ArgumentException ex)
@@ -89,6 +94,7 @@ internal sealed class RefreshAuthenticateHandler : IRefreshAuthenticateHandler
         }
 
         return await this._authenticate.AuthenticateAsync(
+            audience,
             user,
             now,
             cancellationToken

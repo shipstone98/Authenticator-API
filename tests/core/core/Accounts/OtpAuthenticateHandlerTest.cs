@@ -47,6 +47,24 @@ public sealed class OtpAuthenticateHandlerTest
     }
 
 #region HandleAsync method
+#region Invalid arguments
+    [Fact]
+    public async Task TestHandleAsync_Invalid_AudienceNull()
+    {
+        // Act
+        ArgumentException ex =
+            await Assert.ThrowsAsync<ArgumentNullException>(() =>
+                this._handler.HandleAsync(
+                    null!,
+                    String.Empty,
+                    String.Empty,
+                    CancellationToken.None
+                ));
+
+        // Assert
+        Assert.Equal("audience", ex.ParamName);
+    }
+
     [Fact]
     public async Task TestHandleAsync_Invalid_EmailAddressNull()
     {
@@ -54,6 +72,7 @@ public sealed class OtpAuthenticateHandlerTest
         ArgumentException ex =
             await Assert.ThrowsAsync<ArgumentNullException>(() =>
                 this._handler.HandleAsync(
+                    String.Empty,
                     null!,
                     String.Empty,
                     CancellationToken.None
@@ -71,6 +90,7 @@ public sealed class OtpAuthenticateHandlerTest
             await Assert.ThrowsAsync<ArgumentNullException>(() =>
                 this._handler.HandleAsync(
                     String.Empty,
+                    String.Empty,
                     null!,
                     CancellationToken.None
                 ));
@@ -78,6 +98,7 @@ public sealed class OtpAuthenticateHandlerTest
         // Assert
         Assert.Equal("otp", ex.ParamName);
     }
+#endregion
 
 #region Valid arguments
 #region Failure
@@ -95,6 +116,7 @@ public sealed class OtpAuthenticateHandlerTest
         // Act and assert
         return Assert.ThrowsAsync<NotFoundException>(() =>
             this._handler.HandleAsync(
+                String.Empty,
                 String.Empty,
                 String.Empty,
                 CancellationToken.None
@@ -129,6 +151,7 @@ public sealed class OtpAuthenticateHandlerTest
         return Assert.ThrowsAsync<ForbiddenException>(() =>
             this._handler.HandleAsync(
                 String.Empty,
+                String.Empty,
                 OTP,
                 CancellationToken.None
             ));
@@ -161,6 +184,7 @@ public sealed class OtpAuthenticateHandlerTest
         return Assert.ThrowsAsync<ForbiddenException>(() =>
             this._handler.HandleAsync(
                 String.Empty,
+                String.Empty,
                 OTP,
                 CancellationToken.None
             ));
@@ -191,6 +215,7 @@ public sealed class OtpAuthenticateHandlerTest
             this._handler.HandleAsync(
                 String.Empty,
                 String.Empty,
+                String.Empty,
                 CancellationToken.None
             ));
     }
@@ -209,6 +234,7 @@ public sealed class OtpAuthenticateHandlerTest
         // Act and assert
         return Assert.ThrowsAsync<UserNotActiveException>(() =>
             this._handler.HandleAsync(
+                String.Empty,
                 String.Empty,
                 String.Empty,
                 CancellationToken.None
@@ -245,7 +271,7 @@ public sealed class OtpAuthenticateHandlerTest
 
         this._repository._saveAction = () => { };
 
-        this._authentication._authenticateAction = (_, _) =>
+        this._authentication._authenticateAction = (_, _, _) =>
         {
             MockAuthenticateResult result = new();
             result._refreshTokenExpiresFunc = () => refreshTokenExpires;
@@ -265,6 +291,7 @@ public sealed class OtpAuthenticateHandlerTest
         // Act
         IAuthenticateResult result =
             await this._handler.HandleAsync(
+                String.Empty,
                 String.Empty,
                 OTP,
                 CancellationToken.None

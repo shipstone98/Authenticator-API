@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
+using Shipstone.Utilities;
 using Shipstone.Utilities.Security.Cryptography;
 
 using Shipstone.Authenticator.Api.Core;
@@ -20,7 +21,6 @@ namespace Shipstone.Authenticator.Api.Infrastructure.Authentication;
 internal sealed class AuthenticationService : IAuthenticationService
 {
     private readonly AuthenticationOptions _options;
-    private readonly TokenValidationParameters _refreshTokenValidationParameters;
     private readonly RandomNumberGenerator _rng;
     private readonly JwtSecurityTokenHandler _tokenHandler;
 
@@ -33,26 +33,13 @@ internal sealed class AuthenticationService : IAuthenticationService
         ArgumentNullException.ThrowIfNull(rng);
         ArgumentNullException.ThrowIfNull(tokenHandler);
         AuthenticationOptions optionsValue = options?.Value ?? new();
-
-        TokenValidationParameters refreshTokenValidationParameters =
-            new TokenValidationParameters
-            {
-                IssuerSigningKey = optionsValue._refreshTokenSigningKey.Key,
-                ValidAudience = optionsValue._audience,
-                ValidIssuer = optionsValue._issuer,
-                ValidateIssuerSigningKey = true
-            };
-
         this._options = optionsValue;
-
-        this._refreshTokenValidationParameters =
-            refreshTokenValidationParameters;
-
         this._rng = rng;
         this._tokenHandler = tokenHandler;
     }
 
     private String GenerateAccessToken(
+        String audience,
         UserEntity user,
         DateTime now
     )
@@ -72,7 +59,7 @@ internal sealed class AuthenticationService : IAuthenticationService
         SecurityToken token =
             this._tokenHandler.CreateToken(new SecurityTokenDescriptor
             {
-                Audience = this._options._audience,
+                Audience = audience,
                 Expires = now.Add(this._options._accessTokenExpiry),
                 IssuedAt = now,
                 Issuer = this._options._issuer,
@@ -84,7 +71,11 @@ internal sealed class AuthenticationService : IAuthenticationService
         return this._tokenHandler.WriteToken(token);
     }
 
-    private (String Value, DateTime Expires) GenerateRefreshToken(UserEntity user, DateTime now)
+    private (String Value, DateTime Expires) GenerateRefreshToken(
+        String audience,
+        UserEntity user,
+        DateTime now
+    )
     {
         String id = user.Id.ToString();
 
@@ -96,7 +87,7 @@ internal sealed class AuthenticationService : IAuthenticationService
         SecurityToken token =
             this._tokenHandler.CreateToken(new SecurityTokenDescriptor
             {
-                Audience = this._options._audience,
+                Audience = audience,
                 Expires = expires,
                 IssuedAt = now,
                 Issuer = this._options._issuer,
@@ -109,17 +100,70 @@ internal sealed class AuthenticationService : IAuthenticationService
         return (val, expires);
     }
 
+    private async Task<(String Audience, Guid Id)> GetPropertiesAsync(String token)
+    {
+        TokenValidationResult result =
+            await this._tokenHandler.ValidateTokenAsync(
+                token,
+                new TokenValidationParameters
+                {
+                    IssuerSigningKey =
+                        this._options._refreshTokenSigningKey.Key,
+                    ValidIssuer = this._options._issuer,
+                    ValidateAudience = false,
+                    ValidateIssuerSigningKey = true
+                }
+            );
+
+        if (!result.IsValid)
+        {
+            throw new UnauthorizedException(
+                "The provided token could not be verified.",
+                result.Exception
+            );
+        }
+
+        IEnumerable<Claim> claims = result.ClaimsIdentity.Claims;
+
+        Claim? audience =
+            claims.FirstOrDefault(c =>
+                c.Type.Equals(JwtRegisteredClaimNames.Aud));
+
+        Claim? subject =
+            claims.FirstOrDefault(c =>
+                c.Type.Equals(JwtRegisteredClaimNames.Sub));
+
+        if (
+            audience is null
+            || subject is null
+            || !Guid.TryParse(subject.Value, out Guid id)
+        )
+        {
+            throw new UnauthorizedException("The provided token is not a valid token.");
+        }
+
+        return (audience.Value, id);
+    }
+
     Task<IAuthenticateResult> IAuthenticationService.AuthenticateAsync(
+        String audience,
         UserEntity user,
         DateTime now,
         CancellationToken cancellationToken
     )
     {
+        ArgumentNullException.ThrowIfNull(audience);
         ArgumentNullException.ThrowIfNull(user);
-        String accessToken = this.GenerateAccessToken(user, now);
+
+        if (!this._options._audiences.Contains(audience))
+        {
+            throw new ForbiddenException("The provided audience is not authorized.");
+        }
+
+        String accessToken = this.GenerateAccessToken(audience, user, now);
 
         (String refreshToken, DateTime refreshTokenExpires) =
-            this.GenerateRefreshToken(user, now);
+            this.GenerateRefreshToken(audience, user, now);
 
         IAuthenticateResult result =
             new AuthenticateResult(
@@ -146,29 +190,12 @@ internal sealed class AuthenticationService : IAuthenticationService
         return Task.CompletedTask;
     }
 
-    Guid IAuthenticationService.GetId(String token)
+    Task<(String Audience, Guid Id)> IAuthenticationService.GetPropertiesAsync(
+        String token,
+        CancellationToken cancellationToken
+    )
     {
         ArgumentNullException.ThrowIfNull(token);
-
-        ClaimsPrincipal principal =
-            this._tokenHandler.ValidateToken(
-                token,
-                this._refreshTokenValidationParameters,
-                out _
-            );
-
-        Claim? claim =
-            principal.Claims.FirstOrDefault(c =>
-                c.Type.Equals(ClaimTypes.NameIdentifier));
-
-        if (claim is null || !Guid.TryParse(claim.Value, out Guid id))
-        {
-            throw new ArgumentException(
-                "The provided token is not a valid token.",
-                nameof (token)
-            );
-        }
-
-        return id;
+        return this.GetPropertiesAsync(token);
     }
 }

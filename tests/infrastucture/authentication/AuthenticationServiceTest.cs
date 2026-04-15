@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Cryptography;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Xunit;
+
+using Shipstone.Utilities;
 
 using Shipstone.Authenticator.Api.Core.Accounts;
 using Shipstone.Authenticator.Api.Infrastructure.Authentication;
@@ -19,6 +22,7 @@ namespace Shipstone.Authenticator.Api.Infrastructure.AuthenticationTest;
 
 public sealed class AuthenticationServiceTest
 {
+    private const String _audience = "My audience";
     private const int _otpExpiryMinutes = 123456789;
 
     private readonly IAuthenticationService _authentication;
@@ -35,7 +39,13 @@ public sealed class AuthenticationServiceTest
         services._getEnumeratorFunc = collection.GetEnumerator;
 
         services.AddAuthenticatorInfrastructureAuthentication(options =>
-            options.OtpExpiryMinutes = AuthenticationServiceTest._otpExpiryMinutes);
+        {
+            options.Audiences =
+                new String[1] { AuthenticationServiceTest._audience };
+
+            options.OtpExpiryMinutes =
+                AuthenticationServiceTest._otpExpiryMinutes;
+        });
 
         MockRandomNumberGenerator rng = new();
         services.AddSingleton<RandomNumberGenerator>(rng);
@@ -50,13 +60,32 @@ public sealed class AuthenticationServiceTest
         this._tokenHandler = tokenHandler;
     }
 
+#region AuthenticateAsync method
     [Fact]
-    public async Task TestAuthenticateAsync_Invalid()
+    public async Task TestAuthenticateAsync_Invalid_AudienceNull()
     {
         // Act
         ArgumentException ex =
             await Assert.ThrowsAsync<ArgumentNullException>(() =>
                 this._authentication.AuthenticateAsync(
+                    null!,
+                    new UserEntity { },
+                    DateTime.UtcNow,
+                    CancellationToken.None
+                ));
+
+        // Assert
+        Assert.Equal("audience", ex.ParamName);
+    }
+
+    [Fact]
+    public async Task TestAuthenticateAsync_Invalid_UserNull()
+    {
+        // Act
+        ArgumentException ex =
+            await Assert.ThrowsAsync<ArgumentNullException>(() =>
+                this._authentication.AuthenticateAsync(
+                    String.Empty,
                     null!,
                     DateTime.UtcNow,
                     CancellationToken.None
@@ -67,7 +96,26 @@ public sealed class AuthenticationServiceTest
     }
 
     [Fact]
-    public async Task TestAuthenticateAsync_Valid()
+    public Task TestAuthenticateAsync_Valid_Failure()
+    {
+        // Arrange
+        const String TOKEN = "My token";
+        DateTime now = DateTime.UtcNow;
+        this._tokenHandler._createTokenFunc = _ => new MockSecurityToken();
+        this._tokenHandler._writeTokenFunc = _ => TOKEN;
+
+        // Act
+        return Assert.ThrowsAsync<ForbiddenException>(() =>
+            this._authentication.AuthenticateAsync(
+                String.Empty,
+                new UserEntity { },
+                now,
+                CancellationToken.None
+            ));
+    }
+
+    [Fact]
+    public async Task TestAuthenticateAsync_Valid_Success()
     {
         // Arrange
         const String TOKEN = "My token";
@@ -78,6 +126,7 @@ public sealed class AuthenticationServiceTest
         // Act
         IAuthenticateResult result =
             await this._authentication.AuthenticateAsync(
+                AuthenticationServiceTest._audience,
                 new UserEntity { },
                 now,
                 CancellationToken.None
@@ -89,6 +138,7 @@ public sealed class AuthenticationServiceTest
         Assert.False(DateTime.Equals(now, result.RefreshTokenExpires));
         Assert.Equal(DateTimeKind.Utc, result.RefreshTokenExpires.Kind);
     }
+#endregion
 
     [Fact]
     public async Task TestGenerateOtpAsync_Invalid()
@@ -136,83 +186,138 @@ public sealed class AuthenticationServiceTest
         Assert.Equal(DateTimeKind.Utc, user.Updated.Kind);
     }
 
-#region GetId method
-#region Invalid arguments
+#region GetPropertiesAsync method
     [Fact]
-    public void TestGetId_Invalid_IdInvalid()
+    public async Task TestGetPropertiesAsync_Invalid()
+    {
+        // Act
+        ArgumentException ex =
+            await Assert.ThrowsAsync<ArgumentNullException>(() =>
+                this._authentication.GetPropertiesAsync(
+                    null!,
+                    CancellationToken.None
+                ));
+
+        // Assert
+        Assert.Equal("token", ex.ParamName);
+    }
+
+#region Valid arguments
+#region Failure
+    [Fact]
+    public Task TestGetPropertiesAsync_Valid_Failure_TokenNotValid()
+    {
+        // Arrange
+        this._tokenHandler._validateTokenFunc = (_, _) => new();
+
+        // Act and assert
+        return Assert.ThrowsAsync<UnauthorizedException>(() =>
+            this._authentication.GetPropertiesAsync(
+                String.Empty,
+                CancellationToken.None
+            ));
+    }
+
+#region Token valid
+    [Fact]
+    public Task TestGetPropertiesAsync_Valid_Failure_TokenValid_IdNotValid()
     {
         // Arrange
         this._tokenHandler._validateTokenFunc = (_, _) =>
         {
-            ClaimsIdentity identity = new();
-            Claim claim = new(ClaimTypes.NameIdentifier, "My ID");
-            identity.AddClaim(claim);
-            ClaimsPrincipal principal = new(identity);
-            return (principal, null!);
+            TokenValidationResult result = new TokenValidationResult();
+            Claim audience = new(JwtRegisteredClaimNames.Aud, "My audience");
+            Claim subject = new(JwtRegisteredClaimNames.Sub, "12345");
+            IEnumerable<Claim> claims = new Claim[2] { audience, subject };
+            result.ClaimsIdentity = new(claims);
+            result.IsValid = true;
+            return result;
         };
 
-        // Act
-        ArgumentException ex =
-            Assert.Throws<ArgumentException>(() =>
-                this._authentication.GetId(String.Empty));
-
-        // Assert
-        Assert.Equal("token", ex.ParamName);
+        // Act and assert
+        return Assert.ThrowsAsync<UnauthorizedException>(() =>
+            this._authentication.GetPropertiesAsync(
+                String.Empty,
+                CancellationToken.None
+            ));
     }
 
     [Fact]
-    public void TestGetId_Invalid_NotContainsId()
+    public Task TestGetPropertiesAsync_Valid_Failure_TokenValid_NotContainsAudience()
     {
         // Arrange
         this._tokenHandler._validateTokenFunc = (_, _) =>
         {
-            ClaimsPrincipal principal = new();
-            return (principal, null!);
+            TokenValidationResult result = new TokenValidationResult();
+            Claim subject = new(JwtRegisteredClaimNames.Sub, "12345");
+            IEnumerable<Claim> claims = new Claim[1] { subject };
+            result.ClaimsIdentity = new(claims);
+            result.IsValid = true;
+            return result;
         };
 
-        // Act
-        ArgumentException ex =
-            Assert.Throws<ArgumentException>(() =>
-                this._authentication.GetId(String.Empty));
-
-        // Assert
-        Assert.Equal("token", ex.ParamName);
+        // Act and assert
+        return Assert.ThrowsAsync<UnauthorizedException>(() =>
+            this._authentication.GetPropertiesAsync(
+                String.Empty,
+                CancellationToken.None
+            ));
     }
 
     [Fact]
-    public void TestGetId_Invalid_Null()
+    public Task TestGetPropertiesAsync_Valid_Failure_TokenValid_NotContainsId()
     {
-        // Act
-        ArgumentException ex =
-            Assert.Throws<ArgumentNullException>(() =>
-                this._authentication.GetId(null!));
+        // Arrange
+        this._tokenHandler._validateTokenFunc = (_, _) =>
+        {
+            TokenValidationResult result = new TokenValidationResult();
+            Claim audience = new(JwtRegisteredClaimNames.Aud, "My audience");
+            IEnumerable<Claim> claims = new Claim[1] { audience };
+            result.ClaimsIdentity = new(claims);
+            result.IsValid = true;
+            return result;
+        };
 
-        // Assert
-        Assert.Equal("token", ex.ParamName);
+        // Act and assert
+        return Assert.ThrowsAsync<UnauthorizedException>(() =>
+            this._authentication.GetPropertiesAsync(
+                String.Empty,
+                CancellationToken.None
+            ));
     }
+#endregion
 #endregion
 
     [Fact]
-    public void TestGetId_Valid()
+    public async Task TestGetPropertiesAsync_Valid_Success()
     {
         // Arrange
+        const String AUDIENCE = "My audience";
         Guid id = Guid.NewGuid();
 
         this._tokenHandler._validateTokenFunc = (_, _) =>
         {
-            ClaimsIdentity identity = new();
+            TokenValidationResult result = new TokenValidationResult();
             String idString = id.ToString();
-            Claim claim = new(ClaimTypes.NameIdentifier, idString);
-            identity.AddClaim(claim);
-            ClaimsPrincipal principal = new(identity);
-            return (principal, null!);
+            Claim audience = new(JwtRegisteredClaimNames.Aud, AUDIENCE);
+            Claim subject = new(JwtRegisteredClaimNames.Sub, idString);
+            IEnumerable<Claim> claims = new Claim[2] { audience, subject };
+            result.ClaimsIdentity = new(claims);
+            result.IsValid = true;
+            return result;
         };
 
         // Act
-        Guid result = this._authentication.GetId(String.Empty);
+        (String Audience, Guid Id) result =
+            await this._authentication.GetPropertiesAsync(
+                String.Empty,
+                CancellationToken.None
+            );
 
         // Assert
-        Assert.Equal(id, result);
+        Assert.Equal(AUDIENCE, result.Audience);
+        Assert.Equal(id, result.Id);
     }
+#endregion
 #endregion
 }

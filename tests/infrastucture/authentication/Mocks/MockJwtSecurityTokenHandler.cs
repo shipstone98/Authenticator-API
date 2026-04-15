@@ -11,7 +11,7 @@ namespace Shipstone.Authenticator.Api.Infrastructure.AuthenticationTest.Mocks;
 internal sealed class MockJwtSecurityTokenHandler : JwtSecurityTokenHandler
 {
     internal Func<SecurityTokenDescriptor, SecurityToken> _createTokenFunc;
-    internal Func<String, TokenValidationParameters, (ClaimsPrincipal, SecurityToken)> _validateTokenFunc;
+    internal Func<String, TokenValidationParameters, TokenValidationResult> _validateTokenFunc;
     internal Func<SecurityToken, String> _writeTokenFunc;
 
     public sealed override bool CanValidateToken =>
@@ -223,14 +223,8 @@ internal sealed class MockJwtSecurityTokenHandler : JwtSecurityTokenHandler
         String token,
         TokenValidationParameters validationParameters,
         out SecurityToken validatedToken
-    )
-    {
-        (ClaimsPrincipal, SecurityToken) result =
-            this._validateTokenFunc(token, validationParameters);
-
-        validatedToken = result.Item2;
-        return result.Item1;
-    }
+    ) =>
+        throw new NotImplementedException();
 
     public sealed override Task<TokenValidationResult> ValidateTokenAsync(
         SecurityToken token,
@@ -241,8 +235,13 @@ internal sealed class MockJwtSecurityTokenHandler : JwtSecurityTokenHandler
     public sealed override Task<TokenValidationResult> ValidateTokenAsync(
         String token,
         TokenValidationParameters validationParameters
-    ) =>
-        throw new NotImplementedException();
+    )
+    {
+        TokenValidationResult result =
+            this._validateTokenFunc(token, validationParameters);
+
+        return Task.FromResult(result);
+    }
 
     protected sealed override void ValidateTokenReplay(
         Nullable<DateTime> expires,

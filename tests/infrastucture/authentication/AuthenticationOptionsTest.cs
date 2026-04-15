@@ -8,39 +8,6 @@ namespace Shipstone.Authenticator.Api.Infrastructure.AuthenticationTest;
 public sealed class AuthenticationOptionsTest
 {
     [Fact]
-    public void TestAudience_Set_Invalid()
-    {
-        // Arrange
-        AuthenticationOptions options = new();
-        String audience = options.Audience;
-
-        // Act
-        ArgumentException ex =
-            Assert.Throws<ArgumentNullException>(() =>
-                options.Audience = null!);
-
-        // Assert
-        Assert.Equal("value", ex.ParamName);
-        Assert.Equal(audience, options.Audience);
-    }
-
-    [InlineData("")]
-    [InlineData(" ")]
-    [InlineData("My audience")]
-    [Theory]
-    public void TestAudience_Set_Valid(String audience)
-    {
-        // Arrange
-        AuthenticationOptions options = new();
-
-        // Act
-        options.Audience = audience;
-
-        // Assert
-        Assert.Equal(audience, options.Audience);
-    }
-
-    [Fact]
     public void TestIssuer_Set_Invalid()
     {
         // Arrange
@@ -117,7 +84,7 @@ public sealed class AuthenticationOptionsTest
         // Assert
         Assert.False(options.AccessTokenExpiryMinutes <= 0);
         Assert.NotNull(options.AccessTokenSigningKey);
-        Assert.NotNull(options.Audience);
+        Assert.Empty(options.Audiences);
         Assert.NotNull(options.Issuer);
         Assert.False(options.OtpExpiryMinutes <= 0);
         Assert.False(options.RefreshTokenExpiryMinutes <= 0);

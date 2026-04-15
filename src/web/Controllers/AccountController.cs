@@ -123,15 +123,18 @@ internal sealed class AccountController(ILogger<AccountController> logger)
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status410Gone)]
     public Task<IActionResult> OtpAuthenticateAsync(
+        [FromHeader(Name = "X-Authenticator-Audience")] String audience,
         [FromServices] IOtpAuthenticateHandler handler,
         [FromBody] OtpAuthenticateRequest request,
         CancellationToken cancellationToken
     )
     {
+        ArgumentNullException.ThrowIfNull(audience);
         ArgumentNullException.ThrowIfNull(handler);
         ArgumentNullException.ThrowIfNull(request);
 
         return this.OtpAuthenticateAsyncCore(
+            audience,
             handler,
             request,
             cancellationToken
@@ -139,6 +142,7 @@ internal sealed class AccountController(ILogger<AccountController> logger)
     }
 
     private async Task<IActionResult> OtpAuthenticateAsyncCore(
+        String audience,
         IOtpAuthenticateHandler handler,
         OtpAuthenticateRequest request,
         CancellationToken cancellationToken
@@ -150,6 +154,7 @@ internal sealed class AccountController(ILogger<AccountController> logger)
         {
             result =
                 await handler.HandleAsync(
+                    audience,
                     request._emailAddress,
                     request._otp,
                     cancellationToken

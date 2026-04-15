@@ -10,6 +10,7 @@ namespace Shipstone.Authenticator.Api.Core.Services;
 internal interface IAuthenticateService
 {
     Task<IAuthenticateResult> AuthenticateAsync(
+        String audience,
         UserEntity user,
         DateTime now,
         CancellationToken cancellationToken
