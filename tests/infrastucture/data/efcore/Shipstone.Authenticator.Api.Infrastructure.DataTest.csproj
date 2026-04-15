@@ -7,6 +7,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.4.0" />
+    <PackageReference Include="Shipstone.Extensions" Version="11.9.1" />
+    <PackageReference Include="Shipstone.Test" Version="10.0.0" />
 
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -18,5 +20,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\src\infrastructure\data\efcore\Shipstone.Authenticator.Api.Infrastructure.Data.csproj" />
+    <ProjectReference Include="..\..\..\lib\Shipstone.Authenticator.Api.Test.csproj" />
   </ItemGroup>
 </Project>

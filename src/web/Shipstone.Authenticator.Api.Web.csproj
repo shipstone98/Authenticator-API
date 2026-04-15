@@ -12,4 +12,8 @@
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Shipstone.AspNetCore" Version="9.0.1" />
+  </ItemGroup>
 </Project>

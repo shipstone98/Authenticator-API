@@ -4,4 +4,9 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Shipstone.Extensions.Abstractions" Version="9.0.0" />
+    <PackageReference Include="Shipstone.Utilities" Version="10.0.0" />
+  </ItemGroup>
 </Project>
