@@ -21,7 +21,7 @@ internal sealed class StubMailService : IMailService
         int expiryMinutes,
         CancellationToken cancellationToken
     ) =>
-        throw new NotImplementedException();
+        Task.CompletedTask;
 
     Task IMailService.SendRegistrationAsync(
         UserEntity user,

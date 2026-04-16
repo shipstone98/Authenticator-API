@@ -131,7 +131,7 @@ internal sealed class AuthenticationService : IAuthenticationService
 
         Claim? subject =
             claims.FirstOrDefault(c =>
-                c.Type.Equals(JwtRegisteredClaimNames.Sub));
+                c.Type.Equals(ClaimTypes.NameIdentifier));
 
         if (
             audience is null
