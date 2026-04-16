@@ -1,4 +1,4 @@
-POST /api/account/authenticate (email address and password in body)
+PUT /api/account/authenticate (email address and password in body)
 POST /api/account/otpauthenticate (audience in header, email address and OTP in body) - takes audience from header
 POST /api/account/refreshauthenticate (refresh token in body) - takes audience from refresh token
 POST /api/account/register (DOB, email address, forename, and surname in body)

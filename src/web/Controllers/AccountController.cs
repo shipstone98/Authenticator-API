@@ -22,7 +22,7 @@ internal sealed class AccountController(ILogger<AccountController> logger)
 {
     [ActionName("Authenticate")]
     [AllowAnonymous]
-    [HttpPost]
+    [HttpPut]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
