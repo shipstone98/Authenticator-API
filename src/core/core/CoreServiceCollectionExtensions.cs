@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Shipstone.Authenticator.Api.Core.Accounts;
 using Shipstone.Authenticator.Api.Core.Passwords;
 using Shipstone.Authenticator.Api.Core.Services;
+using Shipstone.Authenticator.Api.Core.Users;
 
 namespace Shipstone.Authenticator.Api.Core;
 
@@ -33,6 +34,7 @@ public static class CoreServiceCollectionExtensions
             .AddScoped<IPasswordUpdateHandler, PasswordUpdateHandler>()
             .AddScoped<IRefreshAuthenticateHandler, RefreshAuthenticateHandler>()
             .AddScoped<IRegisterHandler, RegisterHandler>()
-            .AddScoped<IUnregisterHandler, UnregisterHandler>();
+            .AddScoped<IUnregisterHandler, UnregisterHandler>()
+            .AddScoped<IUserUpdateHandler, UserUpdateHandler>();
     }
 }

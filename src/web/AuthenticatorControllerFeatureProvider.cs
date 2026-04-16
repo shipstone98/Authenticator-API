@@ -14,7 +14,11 @@ internal sealed class AuthenticatorControllerFeatureProvider
 
     internal AuthenticatorControllerFeatureProvider() =>
         this._types = new HashSet<Type>
-            { typeof (AccountController), typeof (PasswordController) };
+        {
+            typeof (AccountController),
+            typeof (PasswordController),
+            typeof (UserController)
+        };
 
     protected sealed override bool IsController(TypeInfo typeInfo)
     {

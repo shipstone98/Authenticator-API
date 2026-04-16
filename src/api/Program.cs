@@ -49,7 +49,10 @@ builder.Services
         options.TokenValidationParameters = new TokenValidationParameters
         {
             IssuerSigningKey = new SymmetricSecurityKey(bytes),
-            ValidAudience = authenticationSection["Audience"],
+            ValidAudiences =
+                authenticationSection
+                    .GetRequiredSection("Audiences")
+                    .Get<String[]>(),
             ValidIssuer = authenticationSection["Issuer"],
             ValidateIssuerSigningKey = true
         };

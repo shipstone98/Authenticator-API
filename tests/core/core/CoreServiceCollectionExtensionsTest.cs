@@ -7,6 +7,7 @@ using Xunit;
 using Shipstone.Authenticator.Api.Core;
 using Shipstone.Authenticator.Api.Core.Accounts;
 using Shipstone.Authenticator.Api.Core.Passwords;
+using Shipstone.Authenticator.Api.Core.Users;
 
 using Shipstone.Test.Mocks;
 
@@ -52,7 +53,8 @@ public sealed class CoreServiceCollectionExtensionsTest
             typeof (IPasswordUpdateHandler),
             typeof (IRefreshAuthenticateHandler),
             typeof (IRegisterHandler),
-            typeof (IUnregisterHandler)
+            typeof (IUnregisterHandler),
+            typeof (IUserUpdateHandler)
         };
 
         foreach (Type type in types)
