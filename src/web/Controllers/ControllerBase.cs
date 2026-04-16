@@ -1,10 +1,12 @@
 using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace Shipstone.Authenticator.Api.Web.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("/api/[controller]")]
 internal abstract class ControllerBase<TCategoryName> : ControllerBase
     where TCategoryName : ControllerBase<TCategoryName>
