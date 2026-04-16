@@ -58,7 +58,7 @@ public sealed class PasswordUpdateHandlerTest
                 this._handler.HandleAsync(
                     null!,
                     String.Empty,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -78,7 +78,7 @@ public sealed class PasswordUpdateHandlerTest
                 this._handler.HandleAsync(
                     String.Empty,
                     null!,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -117,7 +117,7 @@ public sealed class PasswordUpdateHandlerTest
                 this._handler.HandleAsync(
                     String.Empty,
                     String.Empty,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -144,7 +144,7 @@ public sealed class PasswordUpdateHandlerTest
             this._handler.HandleAsync(
                 String.Empty,
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 
@@ -163,7 +163,7 @@ public sealed class PasswordUpdateHandlerTest
                 this._handler.HandleAsync(
                     String.Empty,
                     String.Empty,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -190,7 +190,7 @@ public sealed class PasswordUpdateHandlerTest
             this._handler.HandleAsync(
                 String.Empty,
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 
@@ -220,7 +220,7 @@ public sealed class PasswordUpdateHandlerTest
             this._handler.HandleAsync(
                 String.Empty,
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 #endregion
@@ -255,7 +255,7 @@ public sealed class PasswordUpdateHandlerTest
         return this._handler.HandleAsync(
             String.Empty,
             String.Empty,
-            CancellationToken.None
+            TestContext.Current.CancellationToken
         );
     }
 #endregion

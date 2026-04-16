@@ -73,7 +73,7 @@ public sealed class RegisterHandlerTest
                     "John",
                     "Doe",
                     born,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -98,7 +98,7 @@ public sealed class RegisterHandlerTest
                     "John",
                     "Doe",
                     born,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -125,7 +125,7 @@ public sealed class RegisterHandlerTest
                     "John",
                     "Doe",
                     born,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -152,7 +152,7 @@ public sealed class RegisterHandlerTest
                     null!,
                     "Doe",
                     born,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -179,7 +179,7 @@ public sealed class RegisterHandlerTest
                     "John",
                     null!,
                     born,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -223,7 +223,7 @@ public sealed class RegisterHandlerTest
                 "John",
                 "Doe",
                 born,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 
@@ -278,7 +278,7 @@ public sealed class RegisterHandlerTest
                 FORENAME,
                 SURNAME,
                 born,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             );
 
         // Assert
@@ -336,7 +336,7 @@ public sealed class RegisterHandlerTest
                 FORENAME,
                 SURNAME,
                 born,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             );
 
         // Assert

@@ -53,7 +53,10 @@ public sealed class RefreshAuthenticateHandlerTest
         // Act
         ArgumentException ex =
             await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                this._handler.HandleAsync(null!, CancellationToken.None));
+                this._handler.HandleAsync(
+                    null!,
+                    TestContext.Current.CancellationToken
+                ));
 
         // Assert
         Assert.Equal("refreshToken", ex.ParamName);
@@ -73,7 +76,7 @@ public sealed class RefreshAuthenticateHandlerTest
             await Assert.ThrowsAsync<ForbiddenException>(() =>
                 this._handler.HandleAsync(
                     String.Empty,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -107,7 +110,7 @@ public sealed class RefreshAuthenticateHandlerTest
         return Assert.ThrowsAsync<ForbiddenException>(() =>
             this._handler.HandleAsync(
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 
@@ -129,7 +132,7 @@ public sealed class RefreshAuthenticateHandlerTest
         return Assert.ThrowsAsync<NotFoundException>(() =>
             this._handler.HandleAsync(
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 
@@ -167,7 +170,7 @@ public sealed class RefreshAuthenticateHandlerTest
         return Assert.ThrowsAsync<UserNotActiveException>(() =>
             this._handler.HandleAsync(
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 
@@ -205,7 +208,7 @@ public sealed class RefreshAuthenticateHandlerTest
         return Assert.ThrowsAsync<NotFoundException>(() =>
             this._handler.HandleAsync(
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 #endregion
@@ -267,7 +270,7 @@ public sealed class RefreshAuthenticateHandlerTest
         IAuthenticateResult result =
             await this._handler.HandleAsync(
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             );
 
         // Assert

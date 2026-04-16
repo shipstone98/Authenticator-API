@@ -53,7 +53,10 @@ public sealed class PasswordResetHandlerTest
         // Act
         ArgumentException ex =
             await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                this._handler.HandleAsync(null!, CancellationToken.None));
+                this._handler.HandleAsync(
+                    null!,
+                    TestContext.Current.CancellationToken
+                ));
 
         // Assert
         Assert.Equal("emailAddress", ex.ParamName);
@@ -72,7 +75,10 @@ public sealed class PasswordResetHandlerTest
         };
 
         // Act
-        return this._handler.HandleAsync(String.Empty, CancellationToken.None);
+        return this._handler.HandleAsync(
+            String.Empty,
+            TestContext.Current.CancellationToken
+        );
 
         // Nothing to assert
     }
@@ -102,7 +108,10 @@ public sealed class PasswordResetHandlerTest
         this._mail._sendPasswordResetAction = (_, _) => { };
 
         // Act
-        return this._handler.HandleAsync(String.Empty, CancellationToken.None);
+        return this._handler.HandleAsync(
+            String.Empty,
+            TestContext.Current.CancellationToken
+        );
 
         // Nothing to assert
     }
@@ -119,7 +128,10 @@ public sealed class PasswordResetHandlerTest
         };
 
         // Act
-        return this._handler.HandleAsync(String.Empty, CancellationToken.None);
+        return this._handler.HandleAsync(
+            String.Empty,
+            TestContext.Current.CancellationToken
+        );
 
         // Nothing to assert
     }

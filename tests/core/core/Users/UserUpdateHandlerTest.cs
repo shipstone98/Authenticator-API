@@ -56,7 +56,7 @@ public sealed class UserUpdateHandlerTest
                 this._handler.HandleAsync(
                     null!,
                     "Doe",
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -75,7 +75,7 @@ public sealed class UserUpdateHandlerTest
                 this._handler.HandleAsync(
                     "John",
                     null!,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -99,7 +99,11 @@ public sealed class UserUpdateHandlerTest
 
         // Act and assert
         return Assert.ThrowsAsync<UserNotActiveException>(() =>
-            this._handler.HandleAsync("John", "Doe", CancellationToken.None));
+            this._handler.HandleAsync(
+                "John",
+                "Doe",
+                TestContext.Current.CancellationToken
+            ));
     }
 
     [Fact]
@@ -117,7 +121,11 @@ public sealed class UserUpdateHandlerTest
 
         // Act and assert
         return Assert.ThrowsAsync<NotFoundException>(() =>
-            this._handler.HandleAsync("John", "Doe", CancellationToken.None));
+            this._handler.HandleAsync(
+                "John",
+                "Doe",
+                TestContext.Current.CancellationToken
+            ));
     }
 
     [Fact]
@@ -168,7 +176,7 @@ public sealed class UserUpdateHandlerTest
             await this._handler.HandleAsync(
                 $" {FORENAME} ",
                 $" {SURNAME} ",
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             );
 
         // Assert

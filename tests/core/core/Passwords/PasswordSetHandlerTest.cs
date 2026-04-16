@@ -62,7 +62,7 @@ public sealed class PasswordSetHandlerTest
                     null!,
                     String.Empty,
                     String.Empty,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -79,7 +79,7 @@ public sealed class PasswordSetHandlerTest
                     String.Empty,
                     null!,
                     String.Empty,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -100,7 +100,7 @@ public sealed class PasswordSetHandlerTest
                     String.Empty,
                     String.Empty,
                     null!,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -130,7 +130,7 @@ public sealed class PasswordSetHandlerTest
                 String.Empty,
                 String.Empty,
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 
@@ -165,7 +165,7 @@ public sealed class PasswordSetHandlerTest
                 String.Empty,
                 OTP,
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 
@@ -199,7 +199,7 @@ public sealed class PasswordSetHandlerTest
                 String.Empty,
                 OTP,
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 
@@ -231,7 +231,7 @@ public sealed class PasswordSetHandlerTest
                 String.Empty,
                 String.Empty,
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 
@@ -254,7 +254,7 @@ public sealed class PasswordSetHandlerTest
                 String.Empty,
                 String.Empty,
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 #endregion
@@ -290,7 +290,7 @@ public sealed class PasswordSetHandlerTest
             String.Empty,
             OTP,
             String.Empty,
-            CancellationToken.None
+            TestContext.Current.CancellationToken
         );
     }
 #endregion

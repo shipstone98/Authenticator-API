@@ -58,7 +58,7 @@ public sealed class OtpAuthenticateHandlerTest
                     null!,
                     String.Empty,
                     String.Empty,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -75,7 +75,7 @@ public sealed class OtpAuthenticateHandlerTest
                     String.Empty,
                     null!,
                     String.Empty,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -92,7 +92,7 @@ public sealed class OtpAuthenticateHandlerTest
                     String.Empty,
                     String.Empty,
                     null!,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -119,7 +119,7 @@ public sealed class OtpAuthenticateHandlerTest
                 String.Empty,
                 String.Empty,
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 
@@ -153,7 +153,7 @@ public sealed class OtpAuthenticateHandlerTest
                 String.Empty,
                 String.Empty,
                 OTP,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 
@@ -186,7 +186,7 @@ public sealed class OtpAuthenticateHandlerTest
                 String.Empty,
                 String.Empty,
                 OTP,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 
@@ -216,7 +216,7 @@ public sealed class OtpAuthenticateHandlerTest
                 String.Empty,
                 String.Empty,
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 
@@ -237,7 +237,7 @@ public sealed class OtpAuthenticateHandlerTest
                 String.Empty,
                 String.Empty,
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 #endregion
@@ -294,7 +294,7 @@ public sealed class OtpAuthenticateHandlerTest
                 String.Empty,
                 String.Empty,
                 OTP,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             );
 
         // Assert

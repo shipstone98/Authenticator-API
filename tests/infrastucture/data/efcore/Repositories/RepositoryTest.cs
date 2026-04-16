@@ -64,7 +64,7 @@ public sealed class RepositoryTest
         this._dataSource._saveAction = () => { };
 
         // Act
-        return this._repository.SaveAsync(CancellationToken.None);
+        return this._repository.SaveAsync(TestContext.Current.CancellationToken);
 
         // Nothing to assert
     }

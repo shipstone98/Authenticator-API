@@ -71,7 +71,7 @@ public sealed class AuthenticationServiceTest
                     null!,
                     new UserEntity { },
                     DateTime.UtcNow,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -88,7 +88,7 @@ public sealed class AuthenticationServiceTest
                     String.Empty,
                     null!,
                     DateTime.UtcNow,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -110,7 +110,7 @@ public sealed class AuthenticationServiceTest
                 String.Empty,
                 new UserEntity { },
                 now,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 
@@ -129,7 +129,7 @@ public sealed class AuthenticationServiceTest
                 AuthenticationServiceTest._audience,
                 new UserEntity { },
                 now,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             );
 
         // Assert
@@ -149,7 +149,7 @@ public sealed class AuthenticationServiceTest
                 this._authentication.GenerateOtpAsync(
                     null!,
                     DateTime.MinValue,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -168,7 +168,7 @@ public sealed class AuthenticationServiceTest
         await this._authentication.GenerateOtpAsync(
             user,
             now,
-            CancellationToken.None
+            TestContext.Current.CancellationToken
         );
 
         // Assert
@@ -195,7 +195,7 @@ public sealed class AuthenticationServiceTest
             await Assert.ThrowsAsync<ArgumentNullException>(() =>
                 this._authentication.GetPropertiesAsync(
                     null!,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -214,7 +214,7 @@ public sealed class AuthenticationServiceTest
         return Assert.ThrowsAsync<UnauthorizedException>(() =>
             this._authentication.GetPropertiesAsync(
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 
@@ -238,7 +238,7 @@ public sealed class AuthenticationServiceTest
         return Assert.ThrowsAsync<UnauthorizedException>(() =>
             this._authentication.GetPropertiesAsync(
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 
@@ -260,7 +260,7 @@ public sealed class AuthenticationServiceTest
         return Assert.ThrowsAsync<UnauthorizedException>(() =>
             this._authentication.GetPropertiesAsync(
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 
@@ -282,7 +282,7 @@ public sealed class AuthenticationServiceTest
         return Assert.ThrowsAsync<UnauthorizedException>(() =>
             this._authentication.GetPropertiesAsync(
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 #endregion
@@ -311,7 +311,7 @@ public sealed class AuthenticationServiceTest
         (String Audience, Guid Id) result =
             await this._authentication.GetPropertiesAsync(
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             );
 
         // Assert

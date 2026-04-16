@@ -63,7 +63,7 @@ public sealed class AuthenticateHandlerTest
                 this._handler.HandleAsync(
                     null!,
                     String.Empty,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -79,7 +79,7 @@ public sealed class AuthenticateHandlerTest
                 this._handler.HandleAsync(
                     String.Empty,
                     null!,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -104,7 +104,7 @@ public sealed class AuthenticateHandlerTest
             this._handler.HandleAsync(
                 String.Empty,
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 
@@ -136,7 +136,7 @@ public sealed class AuthenticateHandlerTest
                 this._handler.HandleAsync(
                     String.Empty,
                     String.Empty,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -159,7 +159,7 @@ public sealed class AuthenticateHandlerTest
             this._handler.HandleAsync(
                 String.Empty,
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 
@@ -187,7 +187,7 @@ public sealed class AuthenticateHandlerTest
             this._handler.HandleAsync(
                 String.Empty,
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 #endregion
@@ -224,7 +224,7 @@ public sealed class AuthenticateHandlerTest
         return this._handler.HandleAsync(
             String.Empty,
             String.Empty,
-            CancellationToken.None
+            TestContext.Current.CancellationToken
         );
 
         // Nothing to assert
@@ -261,7 +261,7 @@ public sealed class AuthenticateHandlerTest
         return this._handler.HandleAsync(
             String.Empty,
             String.Empty,
-            CancellationToken.None
+            TestContext.Current.CancellationToken
         );
 
         // Nothing to assert
