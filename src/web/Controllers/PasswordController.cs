@@ -10,7 +10,6 @@ using Shipstone.Extensions.Identity;
 using Shipstone.Utilities;
 
 using Shipstone.Authenticator.Api.Core;
-using Shipstone.Authenticator.Api.Core.Accounts;
 using Shipstone.Authenticator.Api.Core.Passwords;
 using Shipstone.Authenticator.Api.Web.Models.Password;
 
