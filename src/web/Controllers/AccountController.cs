@@ -291,7 +291,7 @@ internal sealed class AccountController(ILogger<AccountController> logger)
 
     [ActionName("Register")]
     [AllowAnonymous]
-    [HttpPost]
+    [HttpPut]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]

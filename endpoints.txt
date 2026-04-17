@@ -1,7 +1,7 @@
 PUT /api/account/authenticate (email address and password in body)
 POST /api/account/otpauthenticate (audience in header, email address and OTP in body) - takes audience from header
 POST /api/account/refreshauthenticate (refresh token in body) - takes audience from refresh token
-POST /api/account/register (DOB, email address, forename, and surname in body)
+PUT /api/account/register (DOB, email address, forename, and surname in body)
 DELETE /api/account/unregister AUTH (access token in header)
 PUT /api/password/reset (email address in body)
 POST /api/password/set (OTP and password in body)
